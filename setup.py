@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 from version import get_git_version
 
 
-install_requires = ['numpy', 'matplotlib']
+install_requires = ['numpy', 'pandas', 'matplotlib', 'seaborn']
 
 setup(
     name='ngs-tk',

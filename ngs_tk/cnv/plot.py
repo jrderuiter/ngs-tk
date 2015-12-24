@@ -1,10 +1,11 @@
 import numpy as np
+import seaborn as sns
 from matplotlib import pyplot as plt
 
 
-def plot_cnv(data, y, reference,
-             chrom='chrom', position='position',
-             ax=None, color=None):
+def plot_profile(data, y, reference,
+                 chrom='chrom', position='position',
+                 ax=None, color=None):
     """Plots a CNV profile for a single sample."""
 
     if ax is None:
@@ -33,7 +34,7 @@ def plot_cnv(data, y, reference,
         x = grp[position] + chrom_offset[chrom_id]
         ax.plot(x, grp[y], '.', color=color)
 
-    # Draw dividers and xticklabels.
+    # Draw dividers and x-tick-labels.
     for loc in chrom_cumsums[1:-1]:
         ax.axvline(loc, color='grey', lw=0.5, zorder=5)
 
@@ -49,8 +50,8 @@ def plot_cnv(data, y, reference,
     return ax
 
 
-def plot_segments(data, y, reference, chrom='chrom',
-                  start='start', end='end', ax=None):
+def plot_profile_segments(data, y, reference, chrom='chrom',
+                          start='start', end='end', ax=None):
     """ Plots segments on a drawn CNV axis. """
 
     if ax is None:
@@ -74,3 +75,40 @@ def plot_segments(data, y, reference, chrom='chrom',
         seg_start = row[start] + chrom_offset[row[chrom]]
         seg_end = row[end] + chrom_offset[row[chrom]]
         ax.plot([seg_start, seg_end], [row[y]] * 2, color='red')
+
+
+def plot_heatmap(data,  columns=None, chrom='chrom',
+                 position='position', vline_color='black', **kwargs):
+    """Plots a (clustered) CNV heatmap for multiple samples."""
+
+    # Select all columns by default.
+    if columns is None:
+        columns = [c for c in data if c not in {chrom, position}]
+
+    # Sort data by position.
+    data = data.sort([chrom, position], ascending=True)
+
+    # Plot heatmap.
+    g = sns.clustermap(data[columns].T, linewidths=0,
+                       col_cluster=False, **kwargs)
+    g.ax_heatmap.set_xticks([])
+
+    # Plot chromosome breaks.
+    breaks = np.where(~data[chrom].duplicated(take_last=True))[0]
+    breaks += 1
+
+    for loc in breaks[:-1]:
+        g.ax_heatmap.axvline(loc, color=vline_color)
+
+    # Add chromosome labels.
+    label_pos = np.concatenate([[0], breaks])
+    label_pos = (label_pos[:-1] + label_pos[1:]) / 2
+
+    g.ax_heatmap.set_xticks(label_pos)
+    g.ax_heatmap.set_xticklabels(
+        data[chrom].unique(), rotation=0)
+
+    # Label axes.
+    g.ax_heatmap.set_xlabel(chrom)
+
+    return g
