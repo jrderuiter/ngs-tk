@@ -6,7 +6,7 @@ from version import get_git_version
 install_requires = ['numpy', 'pandas', 'matplotlib', 'seaborn']
 
 setup(
-    name='ngs-tk',
+    name='ngs_tk',
     version=get_git_version(),
     url=None,
     author='Julian de Ruiter',
