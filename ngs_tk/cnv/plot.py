@@ -1,23 +1,35 @@
+from __future__ import (absolute_import, division,
+                        print_function, unicode_literals)
+
+# noinspection PyUnresolvedReferences
+from builtins import (ascii, bytes, chr, dict, filter, hex, input,
+                      int, map, next, oct, open, pow, range, round,
+                      str, super, zip)
+
+
 import numpy as np
 import seaborn as sns
 from matplotlib import pyplot as plt
 
 
-def plot_profile(data, y, reference,
-                 chrom='chrom', position='position',
-                 ax=None, color=None):
+def plot_profile(data, y, reference, chrom='chrom',
+                 position='position', ax=None, color=None,
+                 chromosomes=None):
     """Plots a CNV profile for a single sample."""
 
     if ax is None:
         _, ax = plt.subplots()
 
     # Lookup chromosomes.
-    try:
-        # Try to get order from categorical.
-        chrom_ids = data[chrom].cat.categories
-    except AttributeError:
-        # If that fails, just fall back on unique.
-        chrom_ids = data[chrom].unique()
+    if chromosomes is None:
+        try:
+            # Try to get order from categorical.
+            chrom_ids = data[chrom].cat.categories
+        except AttributeError:
+            # If that fails, just fall back on unique.
+            chrom_ids = data[chrom].unique()
+    else:
+        chrom_ids = chromosomes
 
     # Lookup chromosome lengths/offsets.
     chrom_lengths = [len(reference[k]) for k in chrom_ids]
