@@ -33,9 +33,9 @@
 
 from __future__ import print_function
 
-__all__ = ("get_git_version")
-
 from subprocess import Popen, PIPE
+
+__all__ = ("get_git_version")
 
 
 def call_git_describe(abbrev=4):
