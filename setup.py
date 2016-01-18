@@ -12,7 +12,7 @@ setup(
     author='Julian de Ruiter',
     author_email='julianderuiter@gmail.com',
     description='Toolkit for various NGS analyses.',
-    license='BSD',
+    license='GPLv2',
     packages=find_packages(),
     include_package_data=True,
     zip_safe=True,
