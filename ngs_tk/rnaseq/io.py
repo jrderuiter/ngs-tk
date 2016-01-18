@@ -1,5 +1,9 @@
 import itertools
-import io
+
+try:
+    from io import StringIO
+except ImportError:
+    from StringIO import StringIO
 
 import pandas as pd
 
@@ -26,7 +30,7 @@ def read_csv_startswith(file_path, prefix, **kwargs):
             lambda l: l.startswith(prefix), lines)
 
         # Read lines using pandas.
-        lines_file = io.StringIO(u''.join(list(lines)))
+        lines_file = StringIO(u''.join(list(lines)))
         df = pd.read_csv(lines_file, names=columns, **kwargs)
 
     return df
