@@ -7,7 +7,9 @@ from builtins import (ascii, bytes, chr, dict, filter, hex, input,
                       str, super, zip)
 
 
-def parse_tcga_barcode(barcode, delimiter='-'):
+def parse_barcode(barcode):
+    """Parse a tcga barcode into its constituents."""
+
     # Define fields and their locations in the barcode.
     fields = {
         'project': (0, ),
@@ -22,13 +24,12 @@ def parse_tcga_barcode(barcode, delimiter='-'):
     }
 
     # Split barcode and extract fields.
-    split = barcode.split(delimiter)
+    split = barcode.split('-')
 
-    parsed = {}
-    for field, indices in fields.items():
-        parsed[field] = _extract_field(split, indices)
+    values = {field: _extract_field(split, indices)
+              for field, indices in fields.items()}
 
-    return parsed
+    return values
 
 
 def _extract_field(split, indices):
@@ -46,12 +47,11 @@ def _extract_field(split, indices):
         return None
 
 
-def tcga_sample_id(barcode, delimiter='-'):
-    parsed = parse_tcga_barcode(barcode, delimiter=delimiter)
+def get_sample(barcode):
+    parsed = parse_barcode(barcode)
     return parsed['sample']
 
 
-def tcga_participant_barcode(barcode, delimiter='-'):
-    parsed = parse_tcga_barcode(barcode, delimiter=delimiter)
-    return delimiter.join([parsed['project'], parsed['tss'],
-                           parsed['participant']])
+def get_particpant(barcode):
+    parsed = parse_barcode(barcode)
+    return '-'.join([parsed['project'], parsed['tss'], parsed['participant']])
