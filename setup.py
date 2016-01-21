@@ -18,5 +18,8 @@ setup(
     include_package_data=True,
     zip_safe=True,
     classifiers=[],
-    install_requires=install_requires
+    install_requires=install_requires,
+    package_data={
+        'ngs_tk.io.tests': ['data/*'],
+    }
 )
