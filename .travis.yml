@@ -2,10 +2,8 @@ language: python
 
 python:
     # We don't actually use the Travis Python, but this keeps it organized.
-    - '2.6'
     - '2.7'
-    - '3.3'
-    - '3.4'
+    - '3.5'
 
 install:
     - sudo apt-get update
@@ -24,6 +22,6 @@ install:
     # Create conda environment and install dependencies.
     - conda create -q -n test python=$TRAVIS_PYTHON_VERSION numpy pandas matplotlib seaborn pytest
     - source activate test
-    - pip install pysam
+    - pip install .
 
 script: py.test
