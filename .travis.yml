@@ -20,7 +20,7 @@ install:
     - conda info -a
 
     # Create conda environment and install dependencies.
-    - conda create -q -n test python=$TRAVIS_PYTHON_VERSION numpy pandas matplotlib seaborn pytest
+    - conda create -q -n test python=$TRAVIS_PYTHON_VERSION future numpy pandas matplotlib seaborn pytest
     - source activate test
     - pip install .
 
