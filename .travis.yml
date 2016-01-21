@@ -27,7 +27,3 @@ install:
     - pip install pysam
 
 script: py.test
-
-branches:
-  only:
-    - travis
