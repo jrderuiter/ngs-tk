@@ -3,7 +3,8 @@ from setuptools import setup, find_packages
 from version import get_git_version
 
 
-install_requires = ['numpy', 'pandas', 'matplotlib', 'seaborn', 'pysam']
+install_requires = ['future', 'numpy', 'pandas', 'matplotlib',
+                    'seaborn', 'pysam']
 
 setup(
     name='ngs_tk',
@@ -17,5 +18,8 @@ setup(
     include_package_data=True,
     zip_safe=True,
     classifiers=[],
-    install_requires=install_requires
+    install_requires=install_requires,
+    package_data={
+        'ngs_tk.io.tests': ['data/*'],
+    }
 )
