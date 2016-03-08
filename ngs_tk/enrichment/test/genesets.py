@@ -48,7 +48,7 @@ def _test_sets(selected_genes, gene_sets, all_genes,
     # Sort if required. Note corrected p-value should be monotonic
     # with uncorrected, so we can sort just on the p-value.
     if sort:
-        result.sort('p_value', ascending=True, inplace=True)
+        result.sort_values('p_value', ascending=True, inplace=True)
 
     # Calculate a corrected p-value if required.
     if corr_method is not None:
