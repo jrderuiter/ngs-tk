@@ -61,3 +61,4 @@ target/
 RELEASE-VERSION
 ngs_tk.egg-info
 ngs_tk/.DS_Store
+.DS_Store
