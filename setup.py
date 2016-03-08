@@ -4,7 +4,7 @@ from version import get_git_version
 
 
 install_requires = ['future', 'numpy', 'pandas', 'matplotlib',
-                    'seaborn', 'pysam']
+                    'seaborn', 'pysam', 'cython']
 
 setup(
     name='ngs_tk',
