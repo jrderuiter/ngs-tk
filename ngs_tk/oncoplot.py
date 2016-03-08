@@ -125,9 +125,9 @@ def _inset_square(data, colors, ax):
     # Plot mutations.
     for type_, grp in data.groupby('alteration'):
         if len(grp) > 0:
-            patches = (Rectangle(xy=(sample_lookup[row['sample']] + 0.2,
+            patches = (Rectangle(xy=(sample_lookup[row['sample']] + 0.1,
                                      gene_lookup[row['gene']] + 0.33),
-                                 width=0.6, height=0.33)
+                                 width=0.8, height=0.33)
                        for _, row in grp.iterrows())
 
             patches = PatchCollection(patches, facecolor=colors[type_])
