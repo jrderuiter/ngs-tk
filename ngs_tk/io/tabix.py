@@ -381,7 +381,8 @@ class BedFrame(TabixFrame):
                                names=cls.COL_NAMES, dtype={'chrom': str}))
 
     def write(self, file_path):
-        return self.to_csv(file_path, sep='\t', header=False, index=False)
+        return self.to_csv(file_path, sep=native_str('\t'),
+                           header=False, index=False)
 
     def sort_values(self, *args, **kwargs):
         if len(args) > 0:
