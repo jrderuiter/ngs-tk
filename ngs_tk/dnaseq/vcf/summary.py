@@ -1,7 +1,9 @@
+from itertools import chain
 
 import pandas as pd
 
-from .annovar import summarize_annovar
+from .annovar import summarize_annovar, get_annovar_fields
+from .snpeff import summarize_snpeff, get_snpeff_fields
 from . import stats
 
 
@@ -12,23 +14,39 @@ def summarize_vcf(records, summ_funcs):
     summ_funcs = [_index_func] + summ_funcs
 
     # Process each record.
-    # TODO: Change to generator.
-    rows = []
-    for rec in records:
-        rows.append(tuple(func(rec) for func in summ_funcs))
-
-    # Split index and summary records.
-    index, *summs = zip(*rows)
+    rows = (tuple(func(rec) for func in summ_funcs)
+            for rec in records)
+    index, *summaries = zip(*rows)
 
     # Build index as MultiIndex.
     index = pd.MultiIndex.from_tuples(
         index, names=['chrom', 'pos', 'ref', 'alt'])
 
     # Convert to dataframe(s).
-    frames = (pd.DataFrame.from_records(summ, index=index)
-              for summ in summs)
+    frames = []
+    for summ in summaries:
+        if isinstance(summ[0], (list, tuple)):
+            # Handle nested list case.
+            with_index = (([i] * len(s), s)
+                          for i, s in enumerate(summ)
+                          if s is not None)
+            row_indices, row_summs = zip(*with_index)
 
-    return tuple(frames)
+            # Flatten nested values.
+            row_indices = chain.from_iterable(row_indices)
+            row_summs = chain.from_iterable(row_summs)
+        else:
+            # Handle basic entry case.
+            with_index = ((i, s) for i, s in enumerate(summ)
+                          if s is not None)
+            row_indices, row_summs = zip(*with_index)
+
+        # Create frame using summaries and index entries.
+        frame = pd.DataFrame.from_records(
+            row_summs, index=index[list(row_indices)])
+        frames.append(frame)
+
+    return frames
 
 
 def _index_func(rec):
