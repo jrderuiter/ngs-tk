@@ -16,43 +16,14 @@ from scipy.cluster.hierarchy import linkage
 from .resample import resample
 
 
-def plot_profile(data, reference, ax=None, color=None, chromosomes=None):
+def plot_profile(data, **kwargs):
     """Plots a CNV profile for a single sample."""
 
-    if ax is None:
-        _, ax = plt.subplots()
+    # Plot data points.
+    ax = plot_genomic(data, **kwargs)
 
-    # Lookup chromosomes.
-    if chromosomes is None:
-        chromosomes = natsorted(data.index.levels[0])
-
-    # Lookup chromosome lengths/offsets.
-    chrom_lengths = [len(reference[k]) for k in chromosomes]
-    chrom_cumsums = np.concatenate([[0], np.cumsum(chrom_lengths)])
-
-    chrom_offset = dict(zip(chromosomes, chrom_cumsums))
-
-    # Plot data points for each chromosome individually.
-    groups = data.groupby(level=0)
-    for chrom in chromosomes:
-        grp = groups.get_group(chrom)
-        grp = grp.sort_index()
-
-        x = grp.index.get_level_values(1) + chrom_offset[chrom]
-        ax.plot(x, grp.values, '.', color=color)
-
-    # Draw dividers and x-tick-labels.
-    for loc in chrom_cumsums[1:-1]:
-        ax.axvline(loc, color='grey', lw=0.5, zorder=5)
-
-    ax.set_xticks((chrom_cumsums[:-1] + chrom_cumsums[1:]) / 2)
-    ax.set_xticklabels(chromosomes)
-
-    # Add axis labels and title.
-    ax.set_xlabel('Chromosome')
-    ax.set_ylabel('Value')
-
-    # ax.set_title(y)
+    # Draw line for at y = 0.
+    ax.axhline(0, color='grey', lw=0.5, zorder=-1)
 
     return ax
 

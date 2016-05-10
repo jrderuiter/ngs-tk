@@ -17,8 +17,9 @@ def resample(data, reference, bin_size):
     data = data.replace([np.inf, -np.inf], np.nan)
 
     # Resample per chromosome and concatenate results.
-    resampled = pd.concat((_resample_chrom(chrom, grp, reference, bin_size)
-                           for chrom, grp in data.groupby(level=0)))
+    resampled = (_resample_chrom(chrom, grp, reference, bin_size)
+                 for chrom, grp in data.groupby(level=0))
+    resampled = pd.concat(resampled)
 
     # Drop any resulting NA rows.
     resampled.dropna(inplace=True)
