@@ -1,14 +1,14 @@
 from setuptools import setup, find_packages
 
-from version import get_git_version
-
+import versioneer
 
 install_requires = ['future', 'numpy', 'pandas', 'matplotlib',
                     'seaborn', 'pysam', 'cython', 'natsort']
 
 setup(
     name='ngs_tk',
-    version=get_git_version(),
+    version=versioneer.get_version(),
+    cmdclass=versioneer.get_cmdclass(),
     url=None,
     author='Julian de Ruiter',
     author_email='julianderuiter@gmail.com',

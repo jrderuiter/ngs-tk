@@ -1,0 +1,13 @@
+name: ngstk-dev
+dependencies:
+  - python = 3.5
+  - future
+  - numpy
+  - pandas
+  - matplotlib
+  - seaborn
+  - cython          # Needed for pysam.
+  - natsort
+
+  - pip:
+    - pysam = 0.8.4

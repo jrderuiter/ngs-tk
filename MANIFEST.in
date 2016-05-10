@@ -1,0 +1,2 @@
+include versioneer.py
+include ngs_tk/_version.py
