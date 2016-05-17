@@ -15,6 +15,8 @@ from scipy.cluster.hierarchy import linkage
 
 from .resample import resample
 
+from ngs_tk.plotting.genomic import plot_genomic, plot_genomic_segments
+
 
 def plot_profile(data, **kwargs):
     """Plots a CNV profile for a single sample."""
@@ -28,31 +30,16 @@ def plot_profile(data, **kwargs):
     return ax
 
 
-def plot_profile_segments(data, y, reference, chrom='chrom',
-                          start='start', end='end', ax=None):
-    """ Plots segments on a drawn CNV axis. """
+def plot_segments(data, **kwargs):
+    """ Plots CNV segments for a single sample."""
 
-    if ax is None:
-        _, ax = plt.subplots()
+    # Plot data points.
+    ax = plot_genomic_segments(data, **kwargs)
 
-    # Lookup chromosomes.
-    try:
-        # Try to get order from categorical.
-        chrom_ids = data[chrom].cat.categories
-    except AttributeError:
-        # If that fails, just fall back on unique.
-        chrom_ids = data[chrom].unique()
+    # Draw line for at y = 0.
+    ax.axhline(0, color='grey', lw=0.5, zorder=-1)
 
-    # Lookup chromosome lengths/offsets.
-    chrom_lengths = [len(reference[k]) for k in chrom_ids]
-    chrom_cumsums = np.concatenate([[0], np.cumsum(chrom_lengths)])
-
-    chrom_offset = dict(zip(chrom_ids, chrom_cumsums))
-
-    for _, row in data.iterrows():
-        seg_start = row[start] + chrom_offset[row[chrom]]
-        seg_end = row[end] + chrom_offset[row[chrom]]
-        ax.plot([seg_start, seg_end], [row[y]] * 2, color='red')
+    return ax
 
 
 def plot_heatmap(data, reference=None, chromosomes=None,
